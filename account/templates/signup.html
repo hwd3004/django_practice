@@ -2,18 +2,75 @@
 <!-- -->
 {% block content %}
 <!-- -->
-<div>
+<div id="signupDiv">
   <h1>signup</h1>
-  <p>{{context}}</p>
-  <form action="/account/signup/" method="post">
-    <!-- -->
-    {% csrf_token %}
-    <!-- -->
-    <input type="text" name="userId" placeholder="userId" />
-    <br />
-    <input type="password" name="password" placeholder="password" />
-    <input type="submit" value="submit" />
-  </form>
+  <div>
+    <form>
+      <!-- -->
+      {% csrf_token %}
+      <!-- -->
+      <p>{{userId}}</p>
+      <input type="text" placeholder="userId" v-model="userId" />
+      <br />
+      <input type="password" placeholder="password" v-model="password" />
+    </form>
+    <button @click="signupSubmit">submit</button>
+  </div>
 </div>
-<!-- -->
+<script>
+  $(() => {
+    // https://it-eldorado.tistory.com/141
+    // 장고 csrf 방지 매커니즘
+
+    // https://docs.djangoproject.com/en/4.0/ref/csrf/
+    // 장고 csrf 방지 레퍼런스
+
+    const csrftoken = document.querySelector("[name=csrfmiddlewaretoken]").value;
+    // console.log(csrftoken);
+    // console.log($("[name=csrfmiddlewaretoken]").val());
+
+    // https://link2me.tistory.com/2103
+    // 장고로 ajax 활용하기
+
+    const app = Vue.createApp({
+      data() {
+        return {
+          userId: null,
+          password: null,
+        };
+      },
+      methods: {
+        signupSubmit() {
+          const data = {
+            userId: this.userId,
+            password: this.password,
+          };
+
+          $.ajax({
+            type: "POST",
+            url: "/account/signup/",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify(data),
+            headers: { "X-CSRFToken": csrftoken },
+            success: (response) => {
+              console.log("response : ", response);
+              if (response.status == 1) {
+                alert("가입이 완료되었습니다.");
+                location.href = "/account/login/";
+              } else if (response.status == 0) {
+                alert("이미 있는 아이디입니다.");
+              }
+            },
+            error: (error) => {
+              console.log("error : ", error);
+            },
+          });
+        },
+      },
+    });
+
+    app.mount("#signupDiv");
+  });
+</script>
 {% endblock %}
