@@ -6,9 +6,16 @@
     <h1>base</h1>
     <nav>
       <a href="/">index</a>
-      <a href="/account/signup">sign up</a>
+
+      {% if request.session.user %}
+      <a href="/account/logout">logout</a>
+      {% else %}
       <a href="/account/login">log in</a>
+      <a href="/account/signup">sign up</a>
+      {% endif %}
     </nav>
+
+    <p>{{ request.session.user }}</p>
 
     {% block content %} {% endblock%}
   </body>

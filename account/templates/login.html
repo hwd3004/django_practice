@@ -3,7 +3,64 @@
 {% block content %}
 <!-- -->
 
-<h1>login page</h1>
+<div id="loginDiv">
+  <h1>login page</h1>
+  <div>
+    <form @submit.prevent>
+      <!-- -->
+      {% csrf_token %}
+      <!-- -->
+      <input type="text" v-model="userId" placeholder="userId" required minlength="3" />
+      <br />
+      <input type="password" v-model="password" placeholder="password" required minlength="3" />
+      <br />
+      <input @click="loginSubmit" type="submit" value="log in" />
+    </form>
+  </div>
+</div>
+<script>
+  $(() => {
+    const csrftoken = document.querySelector("[name=csrfmiddlewaretoken]").value;
 
+    const app = Vue.createApp({
+      data() {
+        return {
+          userId: null,
+          password: null,
+        };
+      },
+      methods: {
+        loginSubmit() {
+          const data = {
+            userId: this.userId,
+            password: this.password,
+          };
+
+          $.ajax({
+            type: "POST",
+            url: "/account/login/",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify(data),
+            headers: { "X-CSRFToken": csrftoken },
+            success: (response) => {
+              console.log("response : ", response);
+              if (response.status == 1) {
+                location.href = "/";
+              } else if (response.status == 0) {
+                alert("아이디와 비멀번호를 확인하여주세요.");
+              }
+            },
+            error: (error) => {
+              console.log("error : ", error);
+            },
+          });
+        },
+      },
+    });
+
+    app.mount("#loginDiv");
+  });
+</script>
 <!-- -->
 {% endblock %}

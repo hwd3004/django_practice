@@ -48,4 +48,50 @@ def signup(request: HttpRequest):
 
 
 def login(request: HttpRequest):
-    return render(request, 'login.html')
+    if(request.method == 'POST'):
+
+        data = json.loads(request.body)
+
+        userId = data['userId']
+        password = data['password']
+
+        result = {
+            'status': 0
+        }
+
+        try:
+            checkExistId: User = User.objects.filter(
+                userId=userId).filter(password=password).first()
+
+            # print("===============")
+            # print("checkExistId")
+            # print(checkExistId)
+            # print(checkExistId.id)
+            # print(type(checkExistId.id))
+            # print(type(checkExistId.userId))
+            # print(type(checkExistId.pk))
+            # print("===============")
+
+            if checkExistId:
+
+                sessionUser = {
+                    'id': checkExistId.pk,
+                    'userId': checkExistId.userId
+                }
+
+                request.session['user'] = sessionUser
+
+                result['status'] = 1
+
+                return JsonResponse(result)
+
+        except User.DoesNotExist:
+            return JsonResponse(result)
+    else:
+        return render(request, 'login.html')
+
+
+def logout(request: HttpRequest):
+    if request.session.get('user'):
+        del request.session['user']
+    return redirect('/')

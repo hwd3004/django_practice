@@ -4,17 +4,19 @@
 <!-- -->
 <div id="signupDiv">
   <h1>signup</h1>
+
   <div>
-    <form>
+    <form @submit.prevent>
       <!-- -->
       {% csrf_token %}
       <!-- -->
-      <p>{{userId}}</p>
-      <input type="text" placeholder="userId" v-model="userId" />
+      <!-- <input @change="onChange" type="text" placeholder="userId" v-model="userId" required minlength="3" /> -->
+      <input onchange="onCh()" type="text" placeholder="userId" v-model="userId" required minlength="3" />
       <br />
-      <input type="password" placeholder="password" v-model="password" />
+      <input type="password" placeholder="password" v-model="password" required minlength="3" />
+      <br />
+      <input @click="signupSubmit" type="submit" value="submit" />
     </form>
-    <button @click="signupSubmit">submit</button>
   </div>
 </div>
 <script>
@@ -32,6 +34,10 @@
     // https://link2me.tistory.com/2103
     // 장고로 ajax 활용하기
 
+    onCh = (e)=>{
+      console.log(e.target.value)
+    }
+
     const app = Vue.createApp({
       data() {
         return {
@@ -40,6 +46,14 @@
         };
       },
       methods: {
+        onChange(e) {
+          const regType = /^[A-Za-z0-9+]*$/;
+
+          if (this.userId) {
+          }
+
+          console.log(e.target.value);
+        },
         signupSubmit() {
           const data = {
             userId: this.userId,
