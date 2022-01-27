@@ -2,89 +2,108 @@
 <!-- -->
 {% block content %}
 <!-- -->
-<div id="signupDiv">
+<style>
+  .form_category {
+    display: inline-block;
+    width: 150px;
+  }
+</style>
+<div id="signupDiv" class="mb-3">
   <h1>signup</h1>
 
   <div>
     <form @submit.prevent>
+      {% csrf_token %}
+      <div>
+        <div>
+          <span class="form_category">아이디</span>
+          <input @change="onChangeCheckExistId" type="text" v-model="userId" required minlength="3" />
+          &nbsp;
+          <button @click="checkExistId">중복확인</button>
+        </div>
+        <div>
+          <span class="form_category">비밀번호</span>
+          <input type="password" v-model="password" required minlength="3" />
+        </div>
+        <div>
+          <span class="form_category">비밀번호 확인</span>
+          <input
+            @change="onChangeCheckPassword"
+            type="password"
+            v-model="checkPassword"
+            id="checkPassword"
+            required
+            minlength="3"
+          />
+          &nbsp;
+          <span v-if="resultCheckPassword == 1">비밀번호를 확인하여주세요</span>
+        </div>
+        <div>
+          <span class="form_category">성명</span>
+          <input type="text" v-model="username" required minlength="2" />
+        </div>
+        <div>
+          <span class="form_category">부서</span>
+          <input type="text" v-model="department" required />
+        </div>
+        <div>
+          <span class="form_category">직책 및 직급</span>
+          <input type="text" v-model="position" required />
+        </div>
+        <div>
+          <span class="form_category">이메일</span>
+          <input type="text" v-model="emailName" required />
+          <span>@</span>
+          <input type="text" v-model="emailServer" required />
+          &nbsp;
+          <select v-model="emailServer">
+            <option value="" selected>직접입력</option>
+            <option value="naver.com">네이버</option>
+            <option value="gmail.com">구글</option>
+          </select>
+        </div>
+        <div>
+          <span class="form_category">일반전화</span>
+          <select v-model="phoneNumberFirst">
+            <option value="02" selected>02</option>
+            <option value="032">032</option>
+            <option value="042">042</option>
+          </select>
+          <span>-</span>
+          <input type="text" v-model="phoneNumberMiddle" minlength="3" />
+          <span>-</span>
+          <input type="text" v-model="phoneNumberLast" minlength="3" />
+        </div>
+        <div>
+          <span class="form_category">휴대전화</span>
+          <select v-model="mobilePhoneNumberFirst">
+            <option value="010" selected>010</option>
+            <option value="070">070</option>
+          </select>
+          <span>-</span>
+          <input type="text" v-model="mobilePhoneNumberMiddle" required minlength="3" />
+          <span>-</span>
+          <input type="text" v-model="mobilePhoneNumberLast" required minlength="3" />
+        </div>
+      </div>
+      <div>
+        <input @click="signupSubmit" type="submit" value="submit" />
+      </div>
+    </form>
+
+    {% comment %}
+    <form @submit.prevent>
       <!-- -->
       {% csrf_token %}
       <!-- -->
-      <!-- <input @change="onChange" type="text" placeholder="userId" v-model="userId" required minlength="3" /> -->
-      <input onchange="onCh()" type="text" placeholder="userId" v-model="userId" required minlength="3" />
+      <input type="text" placeholder="userId" v-model="userId" required minlength="3" />
       <br />
       <input type="password" placeholder="password" v-model="password" required minlength="3" />
       <br />
       <input @click="signupSubmit" type="submit" value="submit" />
     </form>
+    {% endcomment %}
   </div>
 </div>
-<script>
-  $(() => {
-    // https://it-eldorado.tistory.com/141
-    // 장고 csrf 방지 매커니즘
-
-    // https://docs.djangoproject.com/en/4.0/ref/csrf/
-    // 장고 csrf 방지 레퍼런스
-
-    const csrftoken = document.querySelector("[name=csrfmiddlewaretoken]").value;
-    // console.log(csrftoken);
-    // console.log($("[name=csrfmiddlewaretoken]").val());
-
-    // https://link2me.tistory.com/2103
-    // 장고로 ajax 활용하기
-
-    onCh = (e)=>{
-      console.log(e.target.value)
-    }
-
-    const app = Vue.createApp({
-      data() {
-        return {
-          userId: null,
-          password: null,
-        };
-      },
-      methods: {
-        onChange(e) {
-          const regType = /^[A-Za-z0-9+]*$/;
-
-          if (this.userId) {
-          }
-
-          console.log(e.target.value);
-        },
-        signupSubmit() {
-          const data = {
-            userId: this.userId,
-            password: this.password,
-          };
-
-          $.ajax({
-            type: "POST",
-            url: "/account/signup/",
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            data: JSON.stringify(data),
-            headers: { "X-CSRFToken": csrftoken },
-            success: (response) => {
-              console.log("response : ", response);
-              if (response.status == 1) {
-                alert("가입이 완료되었습니다.");
-                location.href = "/account/login/";
-              } else if (response.status == 0) {
-                alert("이미 있는 아이디입니다.");
-              }
-            },
-            error: (error) => {
-              console.log("error : ", error);
-            },
-          });
-        },
-      },
-    });
-
-    app.mount("#signupDiv");
-  });
-</script>
+<script src="/static/js/accout.js"></script>
 {% endblock %}

@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+<!-- -->
+{% block content %}
+<!-- -->
+
+<div id="findidDiv">
+  <div>
+    <h3>아이디 찾기</h3>
+    <div>
+      <form @submit.prevent>
+        <!-- -->
+        {% csrf_token %}
+        <!-- -->
+        <input type="text" v-model="username" placeholder="성명" required minlength="3" />
+        <br />
+        <input type="email" v-model="email" placeholder="이메일" required minlength="3" />
+        <br />
+        <input @click="findidSubmit" type="submit" value="아이디 찾기" />
+      </form>
+    </div>
+  </div>
+  <br />
+  <div>
+    <h3>비밀번호 찾기</h3>
+    <div>
+      <form @submit.prevent>
+        <!-- -->
+        {% csrf_token %}
+        <!-- -->
+        <input type="text" v-model="userId" placeholder="아이디" required minlength="3" />
+        <br />
+        <input type="text" v-model="username" placeholder="성명" required minlength="3" />
+        <br />
+        <input type="email" v-model="email" placeholder="이메일" required minlength="3" />
+        <br />
+        <input @click="findpasswordSubmit" type="submit" value="비밀번호 찾기" />
+      </form>
+    </div>
+  </div>
+</div>
+<script src="/static/js/findid.js"></script>
+{% endblock %}

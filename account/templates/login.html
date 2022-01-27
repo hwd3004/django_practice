@@ -17,12 +17,18 @@
       <input @click="loginSubmit" type="submit" value="log in" />
     </form>
   </div>
+  <div>
+    <a href="/account/findid/">
+      <button>아이디/비밀번호 찾기</button>
+    </a>
+  </div>
 </div>
 <script>
   $(() => {
     const csrftoken = document.querySelector("[name=csrfmiddlewaretoken]").value;
 
     const app = Vue.createApp({
+      delimiters: ["{", "}"],
       data() {
         return {
           userId: null,
