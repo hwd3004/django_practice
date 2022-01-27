@@ -90,19 +90,6 @@
         <input @click="signupSubmit" type="submit" value="submit" />
       </div>
     </form>
-
-    {% comment %}
-    <form @submit.prevent>
-      <!-- -->
-      {% csrf_token %}
-      <!-- -->
-      <input type="text" placeholder="userId" v-model="userId" required minlength="3" />
-      <br />
-      <input type="password" placeholder="password" v-model="password" required minlength="3" />
-      <br />
-      <input @click="signupSubmit" type="submit" value="submit" />
-    </form>
-    {% endcomment %}
   </div>
 </div>
 <script src="/static/js/accout.js"></script>

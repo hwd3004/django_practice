@@ -29,9 +29,9 @@
         <!-- -->
         <input type="text" v-model="userId" placeholder="아이디" required minlength="3" />
         <br />
-        <input type="text" v-model="username" placeholder="성명" required minlength="3" />
+        <input type="text" v-model="usernameForPassword" placeholder="성명" required minlength="3" />
         <br />
-        <input type="email" v-model="email" placeholder="이메일" required minlength="3" />
+        <input type="email" v-model="emailForPassword" placeholder="이메일" required minlength="3" />
         <br />
         <input @click="findpasswordSubmit" type="submit" value="비밀번호 찾기" />
       </form>

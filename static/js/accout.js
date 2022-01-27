@@ -16,23 +16,22 @@ $(() => {
     delimiters: ["{", "}"],
     data() {
       return {
-        userId: null,
-        password: null,
-        checkPassword: null,
-        username: null,
-        department: null,
-        position: null,
-        emailName: null,
+        userId: "",
+        password: "",
+        checkPassword: "",
+        username: "",
+        department: "",
+        position: "",
+        emailName: "",
         emailServer: "",
         phoneNumberFirst: "02",
-        phoneNumberMiddle: null,
-        phoneNumberLast: null,
+        phoneNumberMiddle: "",
+        phoneNumberLast: "",
         mobilePhoneNumberFirst: "010",
-        mobilePhoneNumberMiddle: null,
-        mobilePhoneNumberLast: null,
+        mobilePhoneNumberMiddle: "",
+        mobilePhoneNumberLast: "",
         resultCheckExistId: false,
         resultCheckPassword: 0,
-        asd: "asdasdasdasdasdasd",
       };
     },
     methods: {
@@ -47,7 +46,7 @@ $(() => {
           return false;
         }
 
-        if (this.userId == null || this.userId.length < 3) {
+        if (this.userId.length < 3) {
           alert("아이디를 3자 이상 입력해주세요");
           return false;
         }
@@ -65,12 +64,9 @@ $(() => {
           headers: { "X-CSRFToken": csrftoken },
           success: (response) => {
             console.log("response : ", response);
+            alert(response.msg);
             if (response.status == 1) {
               this.resultCheckExistId = true;
-              alert("사용 가능한 아이디입니다.");
-            } else if (response.status == 0) {
-              this.resultCheckExistId = false;
-              alert("이미 있는 아이디입니다.");
             }
           },
           error: (error) => {
@@ -140,7 +136,7 @@ $(() => {
           mobilePhoneNumber: `${this.mobilePhoneNumberFirst}-${this.mobilePhoneNumberMiddle}-${this.mobilePhoneNumberLast}`,
         };
 
-        if (this.resultCheckExistId && this.resultCheckPassword) {
+        if (this.resultCheckExistId && this.resultCheckPassword == 2) {
           $.ajax({
             type: "POST",
             url: "/account/signup/",
@@ -150,15 +146,9 @@ $(() => {
             headers: { "X-CSRFToken": csrftoken },
             success: (response) => {
               console.log("response : ", response);
+              alert(response.msg);
               if (response.status == 1) {
-                alert("가입이 완료되었습니다.");
-                location.href = "/account/login/";
-              } else if (response.status == 0) {
-                alert("이미 있는 아이디입니다.");
-              } else if (response.status == 2) {
-                alert("이미 있는 이메일입니다.");
-              } else if (response.status == 3) {
-                alert("이미 있는 휴대전화번호입니다.");
+                location.href = "/account/login";
               }
             },
             error: (error) => {
@@ -172,7 +162,7 @@ $(() => {
         }
       }, // signupSubmit()
       onChangeCheckExistId(event) {
-        warningCheckExistId = true;
+        resultCheckExistId = false;
       },
       onChangeCheckPassword(event) {
         if (this.password != this.checkPassword) {

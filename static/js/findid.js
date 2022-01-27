@@ -8,6 +8,8 @@ $(() => {
         userId: null,
         username: null,
         email: null,
+        usernameForPassword: null,
+        emailForPassword: null,
       };
     },
     methods: {
@@ -27,9 +29,7 @@ $(() => {
           headers: { "X-CSRFToken": csrftoken },
           success: (response) => {
             console.log("response : ", response);
-            if (response.status == 1) {
-            } else if (response.status == 0) {
-            }
+            alert(response.msg);
           },
           error: (error) => {
             console.log("error : ", error);
@@ -39,8 +39,8 @@ $(() => {
       findpasswordSubmit() {
         const data = {
           userId: this.userId,
-          username: this.username,
-          email: this.email,
+          username: this.usernameForPassword,
+          email: this.emailForPassword,
           reqType: "findpassword",
         };
 
@@ -53,9 +53,7 @@ $(() => {
           headers: { "X-CSRFToken": csrftoken },
           success: (response) => {
             console.log("response : ", response);
-            if (response.status == 1) {
-            } else if (response.status == 0) {
-            }
+            alert(response.msg);
           },
           error: (error) => {
             console.log("error : ", error);
