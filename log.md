@@ -27,5 +27,3 @@ python manage.py migrate
 ```
 
 ===
-
-asdsad
