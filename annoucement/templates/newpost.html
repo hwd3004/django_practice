@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+<!-- -->
+{% block content %}
+<!-- -->
+<style>
+  .form_category {
+    display: inline-block;
+    width: 150px;
+  }
+
+  ul {
+    display: inline-block;
+  }
+</style>
+<div id="newpostDiv">
+  <h1>annoucement new post</h1>
+  <br />
+  <div>
+    <form @submit.prevent enctype="multipart/form-data" id="form">
+      {% csrf_token %}
+      <div>
+        <span class="form_category">제목</span>
+        <input type="text" name="title" v-model="title" />
+      </div>
+      <div>
+        <span class="form_category">작성자</span>
+        <input type="text" id="author" name="author" disabled value="{{request.session.user.userId}}" />
+      </div>
+      <div>
+        <span class="form_category">공개 여부</span>
+        <label>
+          <input type="radio" v-model="visibility" name="visibility" value="public" />
+          <span>공개</span>
+        </label>
+        <label>
+          <input type="radio" v-model="visibility" name="visibility" value="private" />
+          <span>비공개</span>
+        </label>
+      </div>
+      <div>
+        <span class="form_category">내용</span>
+        <textarea name="content" v-model="content" cols="100" rows="10"></textarea>
+      </div>
+      <div>
+        <span class="form_category">첨부파일</span>
+        <ul>
+          <li><input type="file" name="file" /></li>
+          <li><input type="file" name="file" /></li>
+        </ul>
+        <span>
+          <button @click="addFileList">추가</button>
+          <button @click="removeFileList">삭제</button>
+        </span>
+      </div>
+      <div>
+        <input type="submit" id="annoucementSubmit" @click="annoucementSubmit" value="등록" />
+      </div>
+    </form>
+    <!-- <div>
+      <button id="annoucementSubmit" @click="annoucementSubmit">등록</button>
+    </div> -->
+  </div>
+</div>
+<script src="/static/js/annoucement.js"></script>
+<!-- -->
+{% endblock %}
