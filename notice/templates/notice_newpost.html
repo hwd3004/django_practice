@@ -14,56 +14,115 @@
 </style>
 <div id="noticeNewpostDiv">
   <h1>notice newpost</h1>
-  <!-- action="/notice_newpost/" method="post" -->
-  <form @submit.prevent enctype="multipart/form-data" id="form">
+
+  <form action="/notice_newpost/" method="post" enctype="multipart/form-data" >
+    {% csrf_token %} {{form.as_p}}
+    <input type="submit" value="등록" />
+  </form>
+ 
+  <!--  -->
+  <br />
+  <br />
+  <!-- <form @submit.prevent enctype="multipart/form-data" id="form"> -->
+  {% comment %}
+  <form action="/notice_newpost/" method="post" enctype="multipart/form-data">
     {% csrf_token %}
     <!--  -->
-    {% if form.errors %}
-    <div class="alert alert-danger" role="alert">
-      {% for field in form %} {% if field.errors %}
-      <strong>{{ field.label }}</strong>
-      {{ field.errors }} {% endif %} {% endfor %}
-    </div>
-    {% endif %}
     <div>
       <span class="form_category">제목</span>
-      <input type="text" name="title" id="title" />
+      <input type="text" name="title" id="id_title" />
     </div>
     <div>
       <span class="form_category">작성자</span>
-      <input type="hidden" name="author" id="author" value="{{request.session.user.id}}" />
+      <input type="text" name="author" id="id_author" value="{{request.session.user.id}}" />
       <input type="text" disabled value="{{request.session.user.userId}}" />
     </div>
     <div>
       <span class="form_category">공개여부</span>
       <label>
-        <input type="radio" name="visibility" id="visibility" value="public" />
+        <input type="radio" name="visibility" id="id_visibility" value="public" />
         <span>공개</span>
       </label>
       <label>
-        <input type="radio" name="visibility" id="visibility" />
+        <input type="radio" name="visibility" id="id_visibility" value="private" />
         <span>비공개</span>
       </label>
     </div>
     <div>
       <span class="form_category">내용</span>
-      <textarea name="content" cols="100" rows="10"></textarea>
+      <textarea name="content" id="id_content" cols="100" rows="10"></textarea>
     </div>
     <div>
       <span class="form_category">첨부파일</span>
       <ul>
-        <li><input type="file" name="file" /></li>
-        <li><input type="file" name="file" /></li>
+        <li><input type="file" name="id_file" /></li>
       </ul>
       <span class="form_category">
         <button>추가</button>
         <button>삭제</button>
       </span>
     </div>
-    <div>
-      <button type="submit" @click="noticeSubmit">등록</button>
-      <button type="submit">등록2</button>
-    </div>
+    <button type="submit">등록</button>
+    <button type="submit" @click="noticeSubmit">등록/ajax</button>
+  </form>
+  {% endcomment %}
+
+  <form action="/notice_newpost/" method="post" enctype="multipart/form-data">
+  {% comment %} <form @submit.prevent enctype="multipart/form-data" id="form"> {% endcomment %}
+    {% csrf_token %}
+
+    <table>
+      <tr>
+        <th><label for="id_title">제목:</label></th>
+        <td>
+          <input type="text" name="title" value="fdgfdg" maxlength="150" required id="id_title" />
+        </td>
+      </tr>
+
+      <tr>
+        <th><label for="id_author">작성자:</label></th>
+        <td>
+          <select name="author" required id="id_author">
+            <option value="">---------</option>
+
+            <option value="1" selected>User object (1)</option>
+
+            <option value="13">User object (13)</option>
+
+            <option value="14">User object (14)</option>
+          </select>
+        </td>
+      </tr>
+
+      <tr>
+        <th><label for="id_visibility">공개여부:</label></th>
+        <td>
+          <select name="visibility" required id="id_visibility">
+            <option value="">---------</option>
+
+            <option value="public" selected>공개</option>
+
+            <option value="private">비공개</option>
+          </select>
+        </td>
+      </tr>
+
+      <tr>
+        <th><label for="id_content">내용:</label></th>
+        <td>
+          <textarea name="content" cols="40" rows="10" required id="id_content">  fdgfdgfdg</textarea>
+        </td>
+      </tr>
+
+      <tr>
+        <th><label for="id_file">첨부파일:</label></th>
+        <td>
+          <input type="file" name="file" required id="id_file" />
+        </td>
+      </tr>
+    </table>
+    <button type="submit">submit</button>
+    <button type="submit" @click="noticeSubmit">등록/ajax</button>
   </form>
 </div>
 <script src="/static/js/notice.js"></script>

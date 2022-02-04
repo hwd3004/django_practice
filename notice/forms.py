@@ -4,7 +4,7 @@ from django.db import models
 from notice.models import Notice
 
 
-class NoticeForm(forms.ModelForm):
+class NoticeCreationForm(forms.ModelForm):
     class Meta:
         model = Notice
         fields = ['title', 'author', 'visibility', 'content', 'file']

@@ -10,7 +10,7 @@ python manage.py makemigrations
 
 python manage.py migrate
 
-===
+---
 
 테이블 새로 만들기
 
@@ -26,7 +26,7 @@ python manage.py makemigrations
 python manage.py migrate
 ```
 
-===
+---
 
 파일 업로드
 
@@ -42,7 +42,7 @@ https://eveningdev.tistory.com/47 - django 파일 업로드
 
 https://bcdragonfly.tistory.com/18 - django 파일 여러개 업로드
 
-===
+---
 
 https://wikidocs.net/70855
 
@@ -57,3 +57,19 @@ https://roseline124.github.io/django/2019/04/10/pickmeal-reviewform.html
 구글 - django 파일 업로드 "form.is_valid"
 
 https://cjh5414.github.io/django-file-upload/
+
+---
+
+https://www.reddit.com/r/django/comments/kxla55/django_ajax_jquery_and_formdata/
+
+https://learnbatta.com/blog/django-image-and-file-upload-using-ajax-21/
+
+구글 - django modelform
+
+https://wayhome25.github.io/django/2017/05/06/django-model-form/
+
+----
+
+해야할것들
+
+글작성자 - 세션으로 pk 불러오기

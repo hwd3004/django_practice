@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'account.apps.AccountConfig',
     'annoucement.apps.AnnoucementConfig',
     'notice.apps.NoticeConfig',
+    'lab.apps.LabConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

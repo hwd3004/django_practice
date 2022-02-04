@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+<!-- -->
+{% block content %}
+<!-- -->
+
+<div>
+  <h1>Lab Create</h1>
+  <form enctype="multipart/form-data" id="form" method="POST" novalidate="">
+    {%csrf_token%} {{form.as_p}}
+    <input type="submit" />
+  </form>
+</div>
+<script>
+  $(() => {
+    $("#form").submit(function (e) {
+      e.preventDefault();
+      const formdata = new FormData(this);
+      console.log(formdata);
+
+      $.ajax({
+        url: "/labcreate/",
+        type: "POST",
+        data: formdata,
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: (response) => {
+          $(".error").remove();
+          console.log(response);
+        },
+        error: (error) => {
+          alert("에러");
+          console.log(error);
+        },
+      });
+    });
+  });
+</script>
+<!-- -->
+{% endblock %}

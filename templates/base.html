@@ -16,11 +16,21 @@
         {% endif %}
         <!-- <a href="/annoucement/list">공지사항</a> -->
         <a href="/notice_list">Notice</a>
+        <a href="{% url 'lab:create' %}">lab create</a>
+        <a href="/labcreate/">labcreate</a>
       </nav>
 
       <p>{{ request.session.user }}</p>
 
       {% block content %} {% endblock%}
+
+      <div>
+        <br />
+        <br />
+        <br />
+        <br />
+        <p>footer</p>
+      </div>
     </div>
   </body>
 </html>
