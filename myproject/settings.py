@@ -126,15 +126,35 @@ USE_TZ = False
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 # https://velog.io/@wbsl0427/Django-Static-파일-경로-설정-및-js와-html분리
+# https://donis-note.medium.com/장고-스태틱파일에-대해서-알아보자-django-static-files-fcd271e89f96
+
+# 각 static 파일에 대한 url prefix, 템플릿 태그 {% static “경로” %}에 의해 참조되는 설정, 항상 /로 끝나도록 설정해야 함.
 STATIC_URL = 'static/'
+
 STATIC_DIR = os.path.join(BASE_DIR, 'static')
+
+# File System Loader에 의해 참조됨.
 STATICFILES_DIRS = [
     STATIC_DIR,
 ]
 
+#  python manage.py collectstatic 명령이 참조되는 설정, 여러 디렉토리로 나눠진 static 파일을 이 경로에 복사 (배포에서만 의미가 있습니다.)
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
+# 웹 URL을 통해 첨부파일에 접근할 수 있는 URL 경로
 MEDIA_URL = 'media/'
+# 실제 파일이 저장될 경로
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+# 2.5MB 이상의 파일을 업로드하려면 장고 기본 변수의 수정이 필요하다
+# https://docs.djangoproject.com/en/4.0/ref/settings/#file-upload-max-memory-size
+# https://docs.djangoproject.com/en/4.0/ref/settings/#data-upload-max-memory-size
+# 1GB
+FILE_UPLOAD_MAX_MEMORY_SIZE = 1073741824
+DATA_UPLOAD_MAX_MEMORY_SIZE = 1073741824
+FILE_UPLOAD_TEMP_DIR = 'tmp/'
+# FILE_UPLOAD_PERMISSIONS = 0o755
 
 
 # Default primary key field type

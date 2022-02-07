@@ -6,9 +6,9 @@ git commit -m ""
 git push
 ```
 
-python manage.py makemigrations
+python3 manage.py makemigrations && python3 manage.py migrate
 
-python manage.py migrate
+python3 manage.py runserver
 
 ---
 
@@ -77,3 +77,9 @@ vscode 파이썬 max-line 설정
 ---
 
 https://velog.io/@polynomeer/배열을-데이터베이스에-저장하는-방법
+
+---
+
+https://myhappyman.tistory.com/178 - jQuery - ajax xhr을 활용한 파일 업로드 진행 상태 확인하기
+
+https://youtu.be/osqkFdIyDNg - Python Django Multiple File Upload Using Ajax With Progress Bar | JavaScript File Upload Progressbar

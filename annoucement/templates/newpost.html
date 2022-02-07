@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 <!-- -->
+{% load static %}
+<!--  -->
 {% block content %}
 <!-- -->
 <style>
@@ -61,6 +63,6 @@
     </div> -->
   </div>
 </div>
-<script src="/static/js/annoucement.js"></script>
+<script src="{% static '/js/annoucement.js' %}"></script>
 <!-- -->
 {% endblock %}

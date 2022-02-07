@@ -5,12 +5,13 @@ from lab.models import Lab
 
 class LabCreationForm(forms.ModelForm):
 
-    image = forms.ImageField(required=False)
+    # image = forms.ImageField(required=False)
     file = forms.FileField(required=False)
 
     class Meta:
         model = Lab
-        fields = ['title', 'content', 'image', 'file']
+        # fields = ['title', 'content', 'image', 'file']
+        fields = ['title', 'content', 'file']
         # widgets = {
         #     'file': ClearableFileInput(attrs={'multiple': True})
         # }

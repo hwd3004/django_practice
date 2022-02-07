@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 <!-- -->
+{% load static %}
+<!--  -->
 {% block content %}
 <!-- -->
 <style>
@@ -125,6 +127,6 @@
     <button type="submit" @click="noticeSubmit">등록/ajax</button>
   </form>
 </div>
-<script src="/static/js/notice.js"></script>
+<script src="{% static '/js/notice.js' %}"></script>
 <!-- -->
 {% endblock %}

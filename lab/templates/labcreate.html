@@ -29,6 +29,25 @@
     </div>
 
     <input type="submit" />
+    <div class="form-group" style="display: none" id="progress_div">
+      <br />
+      <div class="progress">
+        <div
+          class="progress-bar"
+          id="progress_bar"
+          role="progressbar"
+          style="width: 0%"
+          aria-valuenow="0"
+          aria-valuemin="0"
+          aria-valuemax="100"
+        >
+          0%
+        </div>
+      </div>
+    </div>
+    <div class="row form-group">
+      <p id="progress_text"></p>
+    </div>
   </form>
 </div>
 <script>
@@ -49,6 +68,26 @@
         cache: false,
         contentType: false,
         processData: false,
+        xhr: () => {
+          // https://youtu.be/osqkFdIyDNg
+          // https://myhappyman.tistory.com/178
+          const xhr = $.ajaxSettings.xhr();
+
+          xhr.upload.onprogress = (ev) => {
+            const percentage = ((ev.loaded / ev.total) * 100) | 0;
+            document.getElementById("progress_div").style["display"] = "block";
+            document.getElementById("progress_bar").style["width"] = "" + percentage + "%";
+            document.getElementById("progress_bar").innerHTML = "" + percentage + "%";
+            document.getElementById("progress_text").innerHTML =
+              "Uploaded : " + parseInt(ev.loaded / 1000000) + "/" + parseInt(ev.total / 1000000) + " MB";
+            console.log("Uploaded : " + ev.loaded);
+            console.log("TOTAL : " + ev.total);
+
+            console.log(percentage);
+          };
+
+          return xhr;
+        },
         success: (response) => {
           $(".error").remove();
           console.log(response);
