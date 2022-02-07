@@ -22,15 +22,7 @@
 
       <p>{{ request.session.user }}</p>
 
-      {% block content %} {% endblock%}
-
-      <div>
-        <br />
-        <br />
-        <br />
-        <br />
-        <p>footer</p>
-      </div>
+      {% block content %} {% endblock%} {% include "footer.html" %}
     </div>
   </body>
 </html>

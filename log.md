@@ -1,11 +1,7 @@
 sudo service mysql start
 
-
-
 ```
-git add .
-git commit -m ""
-git push
+git add . && git commit -m "" && git push
 ```
 
 python3 manage.py makemigrations && python3 manage.py migrate

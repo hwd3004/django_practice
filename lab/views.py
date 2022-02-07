@@ -1,10 +1,9 @@
-from urllib import request
 from django.http import HttpRequest, JsonResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.views.generic import CreateView
 from account.models import User
-from base.views import getSessionUserId, result
+from base.views import getSessionUserId, responseAjax
 
 from lab.forms import LabCreationForm
 from lab.models import Lab
@@ -77,13 +76,13 @@ def labcreate(request: HttpRequest):
                 # form.save()
                 temp_lab.save()
 
-                return JsonResponse(result("등록 성공", 1))
+                return JsonResponse(responseAjax("등록 성공", 1))
             else:
                 # print(form.errors)
-                return JsonResponse(result("등록 실패", 0, form.errors))
+                return JsonResponse(responseAjax("등록 실패", 0, form.errors))
         except Exception as e:
             print(e)
-            return JsonResponse(result("에러 발생", -1,))
+            return JsonResponse(responseAjax("에러 발생", -1,))
     else:
         if getSessionUserId(request) == None:
             return redirect('/account/login')

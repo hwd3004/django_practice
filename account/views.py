@@ -3,7 +3,7 @@ import json
 from django.shortcuts import redirect, render
 from django.http import HttpRequest, JsonResponse
 from account.models import User
-from base.views import result
+from base.views import responseAjax
 
 
 def checkExistId(userId):
@@ -37,9 +37,9 @@ def checkid(request: HttpRequest):
         data = json.loads(request.body)
 
         if checkExistId(data['userId']):
-            return JsonResponse(result("이미 있는 아이디입니다.", 0))
+            return JsonResponse(responseAjax("이미 있는 아이디입니다.", 0))
         else:
-            return JsonResponse(result("사용 가능한 아이디입니다.", 1))
+            return JsonResponse(responseAjax("사용 가능한 아이디입니다.", 1))
     else:
         return redirect('/')
 
@@ -66,13 +66,13 @@ def signup(request: HttpRequest):
             # https://hyun0k.tistory.com/entry/Project-Westagram-1
 
             if User.objects.filter(userId=data['userId']).exists():
-                return JsonResponse(result('이미 있는 아이디입니다.', 0))
+                return JsonResponse(responseAjax('이미 있는 아이디입니다.', 0))
 
             elif User.objects.filter(email=data['email']).exists():
-                return JsonResponse(result('이미 있는 이메일입니다.', 2))
+                return JsonResponse(responseAjax('이미 있는 이메일입니다.', 2))
 
             elif User.objects.filter(mobilePhoneNumber=data['mobilePhoneNumber']).exists():
-                return JsonResponse(result('이미 있는 휴대전화번호입니다.', 3))
+                return JsonResponse(responseAjax('이미 있는 휴대전화번호입니다.', 3))
 
             else:
                 newUser = User()
@@ -88,9 +88,9 @@ def signup(request: HttpRequest):
 
                 newUser.save()
 
-                return JsonResponse(result("가입이 완료되었습니다.", 1))
+                return JsonResponse(responseAjax("가입이 완료되었습니다.", 1))
         except:
-            return JsonResponse(result("가입에 실패하였습니다.", -1))
+            return JsonResponse(responseAjax("가입에 실패하였습니다.", -1))
 
     else:
         return render(request, 'signup.html')
@@ -113,12 +113,12 @@ def login(request: HttpRequest):
 
                 request.session['user'] = sessionUser
 
-                return JsonResponse(result("로그인 완료", 1))
+                return JsonResponse(responseAjax("로그인 완료", 1))
             else:
-                return JsonResponse(result("아이디와 비밀번호를 확인하여주세요.", 0))
+                return JsonResponse(responseAjax("아이디와 비밀번호를 확인하여주세요.", 0))
 
         except:
-            return JsonResponse(result("Exception : 로그인 실패", -1))
+            return JsonResponse(responseAjax("Exception : 로그인 실패", -1))
     else:
         return render(request, 'login.html')
 
@@ -143,9 +143,9 @@ def findid(request: HttpRequest):
                     username=username).filter(email=email).first()
 
                 if findUserId:
-                    return JsonResponse(result(f"찾은 아이디 : {findUserId.userId}", 1))
+                    return JsonResponse(responseAjax(f"찾은 아이디 : {findUserId.userId}", 1))
                 else:
-                    return JsonResponse(result("아이디가 없습니다.", 0))
+                    return JsonResponse(responseAjax("아이디가 없습니다.", 0))
 
             elif reqType == 'findpassword':
                 userId = data['userId']
@@ -154,10 +154,10 @@ def findid(request: HttpRequest):
                     username=username).filter(email=email).first()
 
                 if findPassword:
-                    return JsonResponse(result(f"찾은 비밀번호 : {findPassword.password}", 1))
+                    return JsonResponse(responseAjax(f"찾은 비밀번호 : {findPassword.password}", 1))
                 else:
-                    return JsonResponse(result("비밀번호를 찾지 못했습니다. 입력란을 확인하여주세요.", 0))
+                    return JsonResponse(responseAjax("비밀번호를 찾지 못했습니다. 입력란을 확인하여주세요.", 0))
         except:
-            return JsonResponse(result("에러 : 계정 찾기 실패.", -1))
+            return JsonResponse(responseAjax("에러 : 계정 찾기 실패.", -1))
     else:
         return render(request, 'findid.html')

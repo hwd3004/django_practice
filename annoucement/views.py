@@ -1,9 +1,8 @@
-import re
 from django.http import HttpRequest, JsonResponse
 from django.shortcuts import render
 from django.views import View
 
-from base.views import result
+from base.views import responseAjax
 
 
 def list(request: HttpRequest):
@@ -30,7 +29,7 @@ def newpost(request: HttpRequest):
 
         print(request.POST.get("title"))
 
-        return JsonResponse(result("공지 등록 완료", 1))
+        return JsonResponse(responseAjax("공지 등록 완료", 1))
     else:
         return render(request, 'newpost.html')
 
@@ -42,4 +41,4 @@ class NewPost(View):
         print(self.request)
         print(request.POST.get("title"))
         # print(request.POST.get("title"))
-        return JsonResponse(result("공지 등록 완료", 1))
+        return JsonResponse(responseAjax("공지 등록 완료", 1))

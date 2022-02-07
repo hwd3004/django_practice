@@ -20,7 +20,7 @@ class Notice(models.Model):
 
     content = models.TextField()
 
-    file = models.FileField(upload_to='media/', null=True)
+    attachment = models.FileField(null=True)
 
     createdAt = models.DateTimeField(auto_now_add=True)
     updatedAt = models.DateTimeField(auto_now=True)

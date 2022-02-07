@@ -1,73 +1,57 @@
-from audioop import reverse
-from django.http import HttpRequest, HttpResponseRedirect, JsonResponse
+import re
+from django.http import HttpRequest, JsonResponse
 from django.shortcuts import render
-from django.urls import reverse_lazy
+from account.models import User
+from base.views import getSessionUserId, responseAjax
 from notice.forms import NoticeCreationForm
-from django.views.generic import CreateView
 from notice.models import Notice
-
-
-def result(msg, status):
-    return {
-        'status': status,
-        'msg': msg
-    }
+from django.core.files.storage import FileSystemStorage
 
 
 def list(request: HttpRequest):
     return render(request, 'notice_list.html')
 
 
-def newpost(request: HttpRequest):
+def create(request: HttpRequest):
+
     if request.method == 'POST':
-        form = NoticeCreationForm(request.POST, request.FILES)
+        try:
+            form = NoticeCreationForm(request.POST, request.FILES)
 
-        print(form)
+            # print(form)
 
-        if form.is_valid():
-            form.save()
-            print("성공")
-        else:
-            print("실패")
+            if form.is_valid():
+                temp_form: Notice = form.save(commit=False)
 
-        return JsonResponse(result("200", 1))
+                reg = re.compile('[-=+,#/\?:^$.@*\"※~&%ㆍ!』\\‘|\(\)\[\]\<\>`\'…》]')
+                regResult = reg.search(temp_form.title)
+                if regResult != None:
+                    return JsonResponse(responseAjax("제목에는 특수문자를 쓸 수 없습니다.", 3))
+
+                temp_form.author = User.objects.filter(pk=getSessionUserId(request)).first()
+
+                if temp_form.visibility == "private":
+                    if temp_form.password == "" or temp_form.password == None:
+                        return JsonResponse(responseAjax("비공개 체크시 비밀번호가 필요합니다.", 2))
+
+                files = request.FILES.getlist('attachment')
+                fileList = []
+                if len(files) != 0:
+                    for tempFile in files:
+                        fs = FileSystemStorage(base_url="notice/")
+                        tempFilePath = fs.save(f"notice/{tempFile.name}", tempFile)
+                        fileList.append(tempFilePath)
+
+                    temp_form.attachment = str(fileList)
+
+                temp_form.save()
+                return JsonResponse(responseAjax("등록 성공", 1))
+            else:
+                return JsonResponse(responseAjax("글 내용을 입력해주세요.", 0))
+        except Exception as e:
+            print(e)
+            return JsonResponse(responseAjax("에러 발생", -1))
+
     else:
         form = NoticeCreationForm()
-        return render(request, 'notice_newpost.html', {'form': form})
-
-
-class NoticeCreateView(CreateView):
-    model = Notice
-    form_class = NoticeCreationForm
-
-    # 함수에선 return HttpResponseRedirect(reverse('notice:notice_list'))
-    # 클래스에선 success_url = reverse_lazy('notice:notice_list')
-    success_url = reverse_lazy('notice:notice_list')
-
-    template_name = 'notice/templates/notice_newpost.html'
-
-    def form_valid(self, form: NoticeCreationForm):
-        print('self =================================================')
-        print(self.request.POST)
-        
-        print('============================================')
-        print('form ============================================')
-        print(form)
-
-        temp_notice: Notice = form.save(commit=False)
-
-        print(type(temp_notice))
-        
-        print(temp_notice.author)
-        print(temp_notice.file)
-        print(type(temp_notice.author))
-        print(type(temp_notice.file))
-
-        # temp_notice.author = self.request.user
-        temp_notice.save()
-
-        return super().form_valid(form)
-
-    # def get_success_url(self):
-    #     # return reverse('notice:detail', kwargs={'pk':self.object.pk})
-    #     return reverse('notice_list/')
+        return render(request, 'notice_create.html', {'form': form})

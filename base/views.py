@@ -2,7 +2,7 @@ from django.shortcuts import redirect, render
 from django.http import HttpRequest
 
 
-def result(msg: str, status: int, errors=None):
+def responseAjax(msg: str, status: int, errors=None):
     return {
         'status': status,
         'msg': msg,
