@@ -3,6 +3,7 @@ import json
 from django.shortcuts import redirect, render
 from django.http import HttpRequest, JsonResponse
 from account.models import User
+from base.views import result
 
 
 def checkExistId(userId):
@@ -27,13 +28,6 @@ def checkExistMobilePhoneNumber(MobilePhoneNumber):
         return True
     except User.DoesNotExist:
         return False
-
-
-def result(msg, status):
-    return {
-        'status': status,
-        'msg': msg
-    }
 
 
 def checkid(request: HttpRequest):

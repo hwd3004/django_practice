@@ -2,23 +2,48 @@
 <!-- -->
 {% block content %}
 <!-- -->
-
 <div>
   <h1>Lab Create</h1>
-  <form enctype="multipart/form-data" id="form" method="POST" novalidate="">
-    {%csrf_token%} {{form.as_p}}
+  <form enctype="multipart/form-data" id="form" method="POST">
+    {%csrf_token%} {% comment %}{{form.as_p}} {% endcomment %}
+    <div>
+      <span>제목</span>
+      <input type="text" name="title" maxlength="200" required id="id_title" />
+    </div>
+
+    <div>
+      <span>내용</span>
+      <textarea name="content" cols="40" rows="10" required id="id_content"></textarea>
+    </div>
+
+    <div>
+      <span>이미지</span>
+      <input type="file" name="image" accept="image/*" id="id_image" />
+    </div>
+
+    <div>
+      <span>파일</span>
+      <!-- <input type="file" name="file" id="id_file" /> -->
+      <input type="file" name="file" />
+      <input type="file" name="file" />
+    </div>
+
     <input type="submit" />
   </form>
 </div>
 <script>
+  // https://learnbatta.com/blog/django-image-and-file-upload-using-ajax-21/
   $(() => {
     $("#form").submit(function (e) {
       e.preventDefault();
       const formdata = new FormData(this);
       console.log(formdata);
 
+      const thisform = $(this);
+      console.log(thisform);
+
       $.ajax({
-        url: "/labcreate/",
+        url: window.location.pathname,
         type: "POST",
         data: formdata,
         cache: false,
@@ -27,6 +52,14 @@
         success: (response) => {
           $(".error").remove();
           console.log(response);
+          if (response.errors) {
+            $.each(response.errors, (name, error) => {
+              console.log(name);
+              console.log(error);
+              error = '<small class="text-muted error">' + error + "</small>";
+              thisform.find(`[name=${name}]`).after(error);
+            });
+          }
         },
         error: (error) => {
           alert("에러");

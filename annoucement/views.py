@@ -3,12 +3,7 @@ from django.http import HttpRequest, JsonResponse
 from django.shortcuts import render
 from django.views import View
 
-
-def result(msg, status):
-    return {
-        'status': status,
-        'msg': msg
-    }
+from base.views import result
 
 
 def list(request: HttpRequest):

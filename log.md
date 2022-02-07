@@ -68,8 +68,12 @@ https://learnbatta.com/blog/django-image-and-file-upload-using-ajax-21/
 
 https://wayhome25.github.io/django/2017/05/06/django-model-form/
 
-----
+---
 
-해야할것들
+https://microsoft.tistory.com/995
 
-글작성자 - 세션으로 pk 불러오기
+vscode 파이썬 max-line 설정
+
+---
+
+https://velog.io/@polynomeer/배열을-데이터베이스에-저장하는-방법
