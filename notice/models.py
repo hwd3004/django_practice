@@ -20,10 +20,24 @@ class Notice(models.Model):
 
     content = models.TextField()
 
-    attachment = models.FileField(null=True)
+    # attachment = models.FileField(null=True)
+
+    watched = models.IntegerField(default=0)
 
     createdAt = models.DateTimeField(auto_now_add=True)
     updatedAt = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table = "notice"
+
+
+class Notice_Attachment(models.Model):
+    notice = models.ForeignKey(Notice, on_delete=models.CASCADE)
+    filename = models.CharField(null=True, max_length=300)
+    path = models.CharField(null=True, max_length=300)
+    attachment = models.FileField(null=True)
+    createdAt = models.DateTimeField(auto_now_add=True)
+    updatedAt = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = "notice_attachment"

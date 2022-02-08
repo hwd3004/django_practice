@@ -1,5 +1,5 @@
 from django.shortcuts import redirect, render
-from django.http import HttpRequest
+from django.http import Http404, HttpRequest
 
 
 def responseAjax(msg: str, status: int, errors=None):
@@ -26,3 +26,7 @@ def index(request: HttpRequest):
     #     print(request.session.get('user')['id'])
 
     return render(request, 'base.html')
+
+
+# def view(request):
+#     raise Http404("Page Not Found")

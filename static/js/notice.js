@@ -83,13 +83,6 @@ $(() => {
       },
       success: (response) => {
         console.log(response);
-
-        if (response.status == 2) {
-          alert(response.msg);
-          // passwordLabel.scrollIntoView();
-          passwordLabel.focus();
-        }
-
         if (response.status != 1) {
           alert(response.msg);
         }

@@ -1,15 +1,91 @@
+from datetime import datetime
 import re
-from django.http import HttpRequest, JsonResponse
-from django.shortcuts import render
+from django.http import FileResponse, HttpRequest, JsonResponse
+from django.shortcuts import get_object_or_404, render
 from account.models import User
 from base.views import getSessionUserId, responseAjax
 from notice.forms import NoticeCreationForm
-from notice.models import Notice
+from notice.models import Notice, Notice_Attachment
 from django.core.files.storage import FileSystemStorage
+from django.core.paginator import Paginator
+from django.db.models.fields.files import FieldFile
+
+
+def search(request: HttpRequest):
+    # temp = Notice.objects.filter(title__contains='fg')
+    return 0
+
+
+def detail(request: HttpRequest, pk):
+
+    # print(pk)
+    notice: Notice = get_object_or_404(Notice, pk=pk)
+    # print(notice)
+
+    # if notice.password != None:
+    #     return render(request, 'notice_detail.html', {'password': notice.password})
+
+    notice.watched += 1
+    notice.save()
+
+    # https://velog.io/@inyong_pang/Django-QuerySet
+    # 장고 쿼리셋
+
+    noticeAttach = Notice_Attachment.objects.filter(notice=notice).values()
+    # print(noticeAttach)
+    # <QuerySet [{'id': 13, 'notice_id': 60, 'path': 'media/notice/2022-02-08 16:11:22/화면 캡처 2022-02-04 105829.jpg', 'attachment': 'notice/2022-02-08 16:11:22/화면 캡처 2022-02-04 105829.jpg', 'createdAt': datetime.datetime(2022, 2, 8, 16, 11, 22, 571371), 'updatedAt': datetime.datetime(2022, 2, 8, 16, 11, 22, 571386)}, {'id': 14, 'notice_id': 60, 'path': 'media/notice/2022-02-08 16:11:22/주석 2022-01-25 111914.jpg', 'attachment': 'notice/2022-02-08 16:11:22/주석 2022-01-25 111914.jpg', 'createdAt': datetime.datetime(2022, 2, 8, 16, 11, 22, 573495), 'updatedAt': datetime.datetime(2022, 2, 8, 16, 11, 22, 573507)}]>
+
+    attach = []
+    for item in noticeAttach:
+        path = item['path']
+        filename = item['filename']
+        attach.append({'filename': filename, 'path': path})
+
+    # noticeAttach = Notice_Attachment.objects.filter(notice=notice).all()
+    # <QuerySet [<Notice_Attachment: Notice_Attachment object (13)>, <Notice_Attachment: Notice_Attachment object (14)>]>
+
+    return render(request, 'notice_detail.html', {'notice': notice, 'attach': attach})
+
+
+def update(request: HttpRequest, pk):
+    try:
+        notice: Notice = get_object_or_404(Notice, pk=pk)
+
+        noticeAttach = Notice_Attachment.objects.filter(notice=notice).values()
+
+        attach = []
+        for item in noticeAttach:
+            path = item['path']
+            filename = item['filename']
+            attach.append({'filename': filename, 'path': path})
+
+        if request.method == 'GET':
+            return render(request, 'notice_update.html', {'notice': notice, 'attach': attach})
+        else:
+            return render(request, 'notice_update.html', {'notice': notice, 'attach': attach})
+
+    except Exception as e:
+        print(e)
+        return render(request, responseAjax('에러 발생', -1))
 
 
 def list(request: HttpRequest):
-    return render(request, 'notice_list.html')
+    # https://django-orm-cookbook-ko.readthedocs.io/en/latest/asc_or_desc.html
+    # 역순 정렬
+    list = Notice.objects.order_by('-id').all()
+    paginator = Paginator(list, 2)
+
+    pageNumber = request.GET.get("page")
+
+    if pageNumber is None:
+        pageObj = paginator.get_page(1)
+
+        return render(request, 'notice_list.html', {"pageObj": pageObj})
+
+    else:
+        pageObj = paginator.get_page(pageNumber)
+
+        return render(request, 'notice_list.html', {"pageObj": pageObj})
 
 
 def create(request: HttpRequest):
@@ -36,15 +112,42 @@ def create(request: HttpRequest):
 
                 files = request.FILES.getlist('attachment')
                 fileList = []
+                print(files)
+
+                # notice 테이블에 배열형태로 칼럼에 문자를 저장하기
+                # if len(files) != 0:
+                #     for tempFile in files:
+                #         fs = FileSystemStorage(base_url="notice/")
+                #         tempFilePath = fs.save(f"notice/{tempFile.name}", tempFile)
+                #         fileList.append(tempFilePath)
+
+                #     temp_form.attachment = str(fileList)
+
+                # temp_form.save()
+
+                temp_form.save()
+                # print(temp_form.save())
+                # None
+
+                noticeObj = Notice.objects.last()
+                # print(noticeObj)
+
                 if len(files) != 0:
                     for tempFile in files:
                         fs = FileSystemStorage(base_url="notice/")
-                        tempFilePath = fs.save(f"notice/{tempFile.name}", tempFile)
-                        fileList.append(tempFilePath)
+                        currentTime: str = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                        tempFilePath = fs.save(f"notice/{currentTime}/{tempFile.name}", tempFile)
 
-                    temp_form.attachment = str(fileList)
+                        newNoticeAttach = Notice_Attachment()
+                        newNoticeAttach.filename = tempFile.name
+                        newNoticeAttach.notice = noticeObj
+                        newNoticeAttach.path = f"media/{tempFilePath}"
+                        newNoticeAttach.attachment = tempFilePath
 
-                temp_form.save()
+                        # print(newNoticeAttach)
+
+                        newNoticeAttach.save()
+
                 return JsonResponse(responseAjax("등록 성공", 1))
             else:
                 return JsonResponse(responseAjax("글 내용을 입력해주세요.", 0))

@@ -7,6 +7,72 @@
   <h1>notice list</h1>
   <br />
   <div>
+    <select name="search">
+      <option value="title" selected>제목</option>
+      <option value="titleAndContent">제목+내용</option>
+    </select>
+    <input type="text" />
+    <button>검색</button>
+  </div>
+  <br />
+  <div>
+    <table class="table">
+      <thead>
+        <th scope="col">번호</th>
+        <th scope="col">제목</th>
+        <th scope="col">공개여부</th>
+        <th scope="col">작성자</th>
+        <th scope="col">작성일</th>
+        <th scope="col">조회</th>
+      </thead>
+      <tbody>
+        {% for post in pageObj %}
+        <tr>
+          <th scope="row">{{post.id}}</th>
+          <td><a href="/notice/{{post.id}}">{{post.title}}</a></td>
+          <td>{% if post.visibility == 'public' %} 공개 {% else %} 비공개 {% endif %}</td>
+          <td>{{post.author.userId}}</td>
+          <td>{{post.createdAt|date:"Y-m-d"}}</td>
+          <td>{{post.watched}}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <br />
+    <div>
+      <ul class="pagination">
+        {% if pageObj.has_previous %}
+        <li class="page-item">
+          <a class="page-link" href="?page=1" aria-label="Previous">
+            <span aria-hidden="true">&laquo;</span>
+          </a>
+        </li>
+        <li class="page-item"><a class="page-link" href="?page={{ pageObj.previous_page_number }}">Previous</a></li>
+        {% endif %}
+        <!--  -->
+        {% for page in pageObj.paginator.page_range %}
+        <!--  -->
+        {% if page >= pageObj.number|add:-5 and page <= pageObj.number|add:5 %}
+        <li class="page-item {% if page == pageObj.number %} active {% endif %}">
+          <a class="page-link" href="?page={{page}}">{{ page }}</a>
+        </li>
+        {% endif %}
+        <!--  -->
+        {% endfor %}
+        <!--  -->
+        {% if pageObj.has_next %}
+        <li class="page-item"><a class="page-link" href="?page={{ pageObj.next_page_number }}">Next</a></li>
+        <li class="page-item">
+          <a class="page-link" href="?page={{ pageObj.paginator.num_pages }}" aria-label="Next">
+            <span aria-hidden="true">&raquo;</span>
+          </a>
+        </li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+  <br />
+  <div>
     <a href="/notice_create/"><button>등록</button></a>
   </div>
 </div>

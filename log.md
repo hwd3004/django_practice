@@ -8,6 +8,8 @@ python3 manage.py makemigrations && python3 manage.py migrate
 
 python3 manage.py runserver
 
+rm -rf media && mkdir media
+
 ---
 
 테이블 새로 만들기
@@ -81,3 +83,27 @@ https://velog.io/@polynomeer/배열을-데이터베이스에-저장하는-방법
 https://myhappyman.tistory.com/178 - jQuery - ajax xhr을 활용한 파일 업로드 진행 상태 확인하기
 
 https://youtu.be/osqkFdIyDNg - Python Django Multiple File Upload Using Ajax With Progress Bar | JavaScript File Upload Progressbar
+
+---
+
+https://94incheon.github.io/django/Django_DateFomat/ - Django : 장고 DTL 언어 - 날짜(Date) 출력, 저장하기
+
+https://youngwonhan-family.tistory.com/39 - 4. 게시판 만들기 - Django 템플릿 & 페이징(Pagination) 처리( feat. GIF )
+
+https://eveningdev.tistory.com/26 - [django] 페이지 구현(Page), 페이징 처리(Pagination)
+
+https://ysyblog.tistory.com/44 - [Django] 게임 목록(검색, 필터, 가격필터 기능 및 페이징 기능 구현 그리고 최저가 기능 구현)
+
+---
+
+https://velog.io/@inyong_pang/Django-QuerySet - 장고 쿼리셋
+
+---
+
+https://youtu.be/MpDZ34mEJ5Y - How to Upload and Download file with django
+
+https://parkhyeonchae.github.io/ - 장고 crud 정리 블로그
+
+---
+
+https://parkhyeonchae.github.io/2020/04/11/django-project-23/ - 글 수정
