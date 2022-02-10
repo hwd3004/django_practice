@@ -58,12 +58,14 @@
 
     <div>
       <span class="form_category">공개여부</span>
+      <input type="hidden" id="visibilityValue" value="{{notice.visibility}}" />
+      <input type="hidden" id="passwordValue" value="{{notice.password}}" />
       <label>
-        <input type="radio" name="visibility" value="{{notice.visibility}}" checked />
+        <input type="radio" name="visibility" value="public" />
         <span class="">공개</span>
       </label>
       <label>
-        <input type="radio" name="visibility" value="{{notice.visibility}}" />
+        <input type="radio" name="visibility" value="private" />
         <span class="">비공개</span>
       </label>
       <label id="passwordLabel" style="display: none">
@@ -130,5 +132,7 @@
 </div>
 <script src="{% static '/js/summernote.js' %}"></script>
 <script src="{% static '/js/notice.js' %}"></script>
+<script src="{% static '/js/visibilityDOMinUpdate.js' %}"></script>
+
 <!-- -->
 {% endblock %}

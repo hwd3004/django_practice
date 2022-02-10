@@ -16,7 +16,7 @@ class Notice(models.Model):
 
     visibility = models.CharField(max_length=10, choices=VISIBILITY_CHOICES)
 
-    password = models.CharField(null=True, max_length=100)
+    password = models.CharField(null=True, max_length=100, default=None)
 
     content = models.TextField()
 

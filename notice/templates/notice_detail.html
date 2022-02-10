@@ -10,6 +10,10 @@
     width: 150px;
   }
 </style>
+{% csrf_token %}
+<input type="hidden" id="noticeId" value="{{notice.id}}" disabled />
+<input type="hidden" id="checkVisibility" value="{{notice.visibility}}" />
+<input type="hidden" id="checkPassword" value="{{notice.password}}" />
 <div>
   <div>
     <span class="form_category">제목</span>
@@ -41,9 +45,14 @@
   <!-- 글상세보기 Tag Escape 방지 -->
   <div>{{ notice.content | safe }}</div>
   <hr />
+  {% if notice.author_id == request.session.user.id %}
   <div>
     <a href="/notice_update/{{notice.id}}"><button>수정</button></a>
+    <button id="deleteNotice">삭제</button>
   </div>
+  {% endif %}
 </div>
 <!-- -->
+<script src="{% static '/js/visibilityDOM.js' %}"></script>
+<script src="{%static '/js/deleteNotice.js'%}"></script>
 {% endblock %}

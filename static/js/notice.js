@@ -1,11 +1,6 @@
 $(() => {
   const csrftoken = document.querySelector("[name=csrfmiddlewaretoken]").value;
 
-  const visibility = document.querySelectorAll("[name=visibility]");
-
-  const passwordLabel = document.querySelector("#passwordLabel");
-  const password = document.querySelector("[name=password");
-
   const addAttach = document.querySelector("#addAttach");
   const removeAttach = document.querySelector("#removeAttach");
 
@@ -17,8 +12,34 @@ $(() => {
 
   for (let index = 0; index < removeHasAttach.length; index++) {
     removeHasAttach[index].addEventListener("click", function () {
-      console.log(this.parentNode.remove());
+      const res = confirm("첨부파일을 삭제하시겠습니까?");
 
+      if (res) {
+        const hasAttachId = parseInt(hasAttach[index].value);
+
+        $.ajax({
+          url: "/notice_removeHasAttach/",
+          type: "POST",
+          data: JSON.stringify({ hasAttachId: hasAttachId }),
+          contentType: "application/json; charset=utf-8",
+          dataType: "json",
+          headers: { "X-CSRFToken": csrftoken },
+          success: (response) => {
+            console.log(response);
+            if (response.status != 1) {
+              alert(response.msg);
+            }
+
+            if (response.status == 1) {
+              this.parentNode.remove();
+            }
+          },
+          error: (error) => {
+            alert("에러");
+            console.log(error);
+          },
+        });
+      }
     });
   }
 
@@ -44,30 +65,17 @@ $(() => {
     }
   });
 
-  for (let index = 0; index < visibility.length; index++) {
-    visibility[index].addEventListener("click", function () {
-      console.log(this.value);
-
-      if (this.value == "private") {
-        passwordLabel.style["display"] = "inline-block";
-      } else {
-        passwordLabel.style["display"] = "none";
-        password.value = null;
-      }
-    });
-  }
-
   $("#form").submit(function (e) {
     e.preventDefault();
     const formdata = new FormData(this);
 
-    if (hasAttach) {
-      for (let index = 0; index < hasAttach.length; index++) {
-        const id = parseInt(hasAttach[index].value);
-        console.log(typeof id);
-        formdata.append("hasAttach", id);
-      }
-    }
+    // if (hasAttach) {
+    //   for (let index = 0; index < hasAttach.length; index++) {
+    //     const id = parseInt(hasAttach[index].value);
+    //     console.log(typeof id);
+    //     formdata.append("hasAttach", id);
+    //   }
+    // }
 
     console.log(formdata);
 

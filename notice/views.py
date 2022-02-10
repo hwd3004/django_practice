@@ -1,10 +1,13 @@
 from datetime import datetime
+import json
 from pickle import FALSE
 import re
-from django.http import FileResponse, HttpRequest, JsonResponse
-from django.shortcuts import get_object_or_404, render
+from tokenize import Number
+from django.http import FileResponse, HttpRequest, HttpResponse, JsonResponse
+from django.shortcuts import get_object_or_404, redirect, render
 from account.models import User
 from base.views import getSessionUserId, responseAjax
+import notice
 from notice.forms import NoticeCreationForm
 from notice.models import Notice, Notice_Attachment
 from django.core.files.storage import FileSystemStorage
@@ -46,7 +49,40 @@ def detail(request: HttpRequest, pk):
     # noticeAttach = Notice_Attachment.objects.filter(notice=notice).all()
     # <QuerySet [<Notice_Attachment: Notice_Attachment object (13)>, <Notice_Attachment: Notice_Attachment object (14)>]>
 
+    if notice.visibility == 'private':
+        print()
+
     return render(request, 'notice_detail.html', {'notice': notice, 'attach': attach})
+
+
+def removeHasAttach(request: HttpRequest):
+    try:
+        if request.method == 'POST':
+            hasAttachId: int = json.loads(request.body)['hasAttachId']
+
+            item: Notice_Attachment = Notice_Attachment.objects.get(pk=hasAttachId)
+            item.delete()
+
+            return JsonResponse(responseAjax('첨부파일 삭제 완료', 1))
+        else:
+            return redirect('/')
+    except Exception as e:
+        print(e)
+        return JsonResponse(responseAjax('에러 발생', 0))
+
+
+def delete(request: HttpRequest, pk):
+    try:
+        print(f"pk : {pk}")
+        notice: Notice = get_object_or_404(Notice, pk=pk)
+        if getSessionUserId(request=request) != notice.author.pk:
+            return JsonResponse(responseAjax('비정상적 접근', -1))
+        else:
+            notice.delete()
+
+            return JsonResponse(responseAjax('삭제 완료', 1))
+    except Exception as e:
+        return JsonResponse(responseAjax('에러 발생', 0))
 
 
 def update(request: HttpRequest, pk):
@@ -66,25 +102,44 @@ def update(request: HttpRequest, pk):
         if request.method == 'POST':
             form = NoticeCreationForm(request.POST, request.FILES, instance=notice)
 
-            # print(notice)
-            # print('=========')
-            # print(form)
-            # print('=========')
-            # print(request.POST.getlist("hasAttachment"))
-            # print('=========')
-            # print(request.FILES)
-
-            print(request.POST)
-            # print(request.POST.keys())
-
             if form.is_valid():
-                temp: Notice = form.save(commit=False)
-                print(temp)
-                # temp.save()
+                temp_form: Notice = form.save(commit=False)
+
+                if temp_form.pk != getSessionUserId(request=request):
+                    return redirect('/')
+
+                reg = re.compile('[-=+,#/\?:^$.@*\"※~&%ㆍ!』\\‘|\(\)\[\]\<\>`\'…》]')
+                regResult = reg.search(temp_form.title)
+                if regResult != None:
+                    return JsonResponse(responseAjax("제목에는 특수문자를 쓸 수 없습니다.", 3))
+
+                if temp_form.visibility == "private":
+                    if temp_form.password == "" or temp_form.password == None:
+                        return JsonResponse(responseAjax("비공개 체크시 비밀번호가 필요합니다.", 2))
+
+                files = request.FILES.getlist('attachment')
+
+                temp_form.save()
+
+                noticeObj = Notice.objects.get(pk=pk)
+
+                if len(files) != 0:
+                    for tempFile in files:
+                        fs = FileSystemStorage(base_url="notice/")
+                        currentTime: str = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                        tempFilePath = fs.save(f"notice/{currentTime}/{tempFile.name}", tempFile)
+
+                        newNoticeAttach = Notice_Attachment()
+                        newNoticeAttach.filename = tempFile.name
+                        newNoticeAttach.notice = noticeObj
+                        newNoticeAttach.path = f"media/{tempFilePath}"
+                        newNoticeAttach.attachment = tempFilePath
+
+                        newNoticeAttach.save()
 
                 return JsonResponse(responseAjax("변경 완료", 1))
             else:
-                return JsonResponse(responseAjax("form is invalid.", 2))
+                return JsonResponse(responseAjax("form is invalid.", 5))
 
         else:
             return render(request, 'notice_update.html', {'notice': notice, 'attach': attach})
@@ -136,7 +191,6 @@ def create(request: HttpRequest):
                         return JsonResponse(responseAjax("비공개 체크시 비밀번호가 필요합니다.", 2))
 
                 files = request.FILES.getlist('attachment')
-                fileList = []
                 print(files)
 
                 # notice 테이블에 배열형태로 칼럼에 문자를 저장하기
