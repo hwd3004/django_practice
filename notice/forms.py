@@ -18,5 +18,5 @@ class NoticeCreationForm(forms.ModelForm):
             'password': '비밀번호',
             'visibility': '공개여부',
             'content': '내용',
-            'attachment': '첨부파일'
+            'attachment': '첨부파일',
         }

@@ -1,4 +1,5 @@
 from datetime import datetime
+from pickle import FALSE
 import re
 from django.http import FileResponse, HttpRequest, JsonResponse
 from django.shortcuts import get_object_or_404, render
@@ -39,7 +40,8 @@ def detail(request: HttpRequest, pk):
     for item in noticeAttach:
         path = item['path']
         filename = item['filename']
-        attach.append({'filename': filename, 'path': path})
+        id = item['id']
+        attach.append({'filename': filename, 'path': path, 'id': id})
 
     # noticeAttach = Notice_Attachment.objects.filter(notice=notice).all()
     # <QuerySet [<Notice_Attachment: Notice_Attachment object (13)>, <Notice_Attachment: Notice_Attachment object (14)>]>
@@ -54,13 +56,36 @@ def update(request: HttpRequest, pk):
         noticeAttach = Notice_Attachment.objects.filter(notice=notice).values()
 
         attach = []
-        for item in noticeAttach:
-            path = item['path']
-            filename = item['filename']
-            attach.append({'filename': filename, 'path': path})
+        if noticeAttach != None:
+            for item in noticeAttach:
+                path = item['path']
+                filename = item['filename']
+                id = item['id']
+                attach.append({'filename': filename, 'path': path, 'id': id})
 
-        if request.method == 'GET':
-            return render(request, 'notice_update.html', {'notice': notice, 'attach': attach})
+        if request.method == 'POST':
+            form = NoticeCreationForm(request.POST, request.FILES, instance=notice)
+
+            # print(notice)
+            # print('=========')
+            # print(form)
+            # print('=========')
+            # print(request.POST.getlist("hasAttachment"))
+            # print('=========')
+            # print(request.FILES)
+
+            print(request.POST)
+            # print(request.POST.keys())
+
+            if form.is_valid():
+                temp: Notice = form.save(commit=False)
+                print(temp)
+                # temp.save()
+
+                return JsonResponse(responseAjax("변경 완료", 1))
+            else:
+                return JsonResponse(responseAjax("form is invalid.", 2))
+
         else:
             return render(request, 'notice_update.html', {'notice': notice, 'attach': attach})
 
@@ -143,8 +168,6 @@ def create(request: HttpRequest):
                         newNoticeAttach.notice = noticeObj
                         newNoticeAttach.path = f"media/{tempFilePath}"
                         newNoticeAttach.attachment = tempFilePath
-
-                        # print(newNoticeAttach)
 
                         newNoticeAttach.save()
 

@@ -11,6 +11,17 @@ $(() => {
 
   const attachBox = document.querySelector("#attachBox");
 
+  const hasAttach = document.querySelectorAll(".hasAttach");
+
+  const removeHasAttach = document.querySelectorAll(".removeHasAttach");
+
+  for (let index = 0; index < removeHasAttach.length; index++) {
+    removeHasAttach[index].addEventListener("click", function () {
+      console.log(this.parentNode.remove());
+
+    });
+  }
+
   // https://meanbymin.tistory.com/78
   // http://www.w3big.com/ko/jsref/met-node-removechild.html
 
@@ -49,6 +60,15 @@ $(() => {
   $("#form").submit(function (e) {
     e.preventDefault();
     const formdata = new FormData(this);
+
+    if (hasAttach) {
+      for (let index = 0; index < hasAttach.length; index++) {
+        const id = parseInt(hasAttach[index].value);
+        console.log(typeof id);
+        formdata.append("hasAttach", id);
+      }
+    }
+
     console.log(formdata);
 
     const thisform = $(this);

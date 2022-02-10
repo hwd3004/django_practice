@@ -27,7 +27,7 @@
     width: 100%;
   }
 
-  .removeButton:hover {
+  .removeHasAttach:hover {
     cursor: pointer;
   }
 </style>
@@ -85,14 +85,17 @@
       <br />
       <span class="form_category">첨부파일</span>
       <span>
-        <span id="attachBox" class="temp">
-          {% for item in attach %}
+        <span>
+          {% for file in attach %}
           <p>
-            <input class="filename" type="text" value="{{item.filename}}" disabled />
-            <!-- <input class="filename" type="text" name="attachment" value="{{item.path}}" disabled /> -->
-            <span class="removeButton">❌</span>
+            <input type="hidden" value="{{file.id}}" class="hasAttach" />
+            <input class="filename" name="hasAttachment" type="text" value="{{file.filename}}" disabled />
+            <span class="removeHasAttach">❌</span>
           </p>
           {% endfor %}
+        </span>
+        <span id="attachBox" class="temp">
+          <input type="file" name="attachment" />
         </span>
         <br />
         <span class="temp">
