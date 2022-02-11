@@ -2,7 +2,7 @@ $(() => {
   const visibility = document.querySelectorAll("[name=visibility]");
 
   const passwordLabel = document.querySelector("#passwordLabel");
-  const password = document.querySelector("[name=password");
+  const password = document.querySelector("[name=password]");
 
   for (let index = 0; index < visibility.length; index++) {
     visibility[index].addEventListener("click", function () {

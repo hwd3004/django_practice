@@ -86,27 +86,27 @@ def delete(request: HttpRequest, pk):
 
 
 def update(request: HttpRequest, pk):
-    try:
-        notice: Notice = get_object_or_404(Notice, pk=pk)
+    notice: Notice = get_object_or_404(Notice, pk=pk)
 
-        noticeAttach = Notice_Attachment.objects.filter(notice=notice).values()
+    noticeAttach = Notice_Attachment.objects.filter(notice=notice).values()
 
-        attach = []
-        if noticeAttach != None:
-            for item in noticeAttach:
-                path = item['path']
-                filename = item['filename']
-                id = item['id']
-                attach.append({'filename': filename, 'path': path, 'id': id})
+    attach = []
+    if noticeAttach != None:
+        for item in noticeAttach:
+            path = item['path']
+            filename = item['filename']
+            id = item['id']
+            attach.append({'filename': filename, 'path': path, 'id': id})
 
-        if request.method == 'POST':
+    if request.method == 'POST':
+        try:
             form = NoticeCreationForm(request.POST, request.FILES, instance=notice)
 
             if form.is_valid():
                 temp_form: Notice = form.save(commit=False)
 
-                if temp_form.pk != getSessionUserId(request=request):
-                    return redirect('/')
+                if temp_form.author.pk != getSessionUserId(request=request):
+                    return JsonResponse(responseAjax("비정상적 접근 : 글 작성자가 아닙니다.", 4))
 
                 reg = re.compile('[-=+,#/\?:^$.@*\"※~&%ㆍ!』\\‘|\(\)\[\]\<\>`\'…》]')
                 regResult = reg.search(temp_form.title)
@@ -140,13 +140,14 @@ def update(request: HttpRequest, pk):
                 return JsonResponse(responseAjax("변경 완료", 1))
             else:
                 return JsonResponse(responseAjax("form is invalid.", 5))
+        except Exception as e:
+            print(e)
+            return render(request, responseAjax('에러 발생', -1))
 
-        else:
-            return render(request, 'notice_update.html', {'notice': notice, 'attach': attach})
+    else:
+        return render(request, 'notice_update.html', {'notice': notice, 'attach': attach})
 
-    except Exception as e:
-        print(e)
-        return render(request, responseAjax('에러 발생', -1))
+
 
 
 def list(request: HttpRequest):
@@ -169,6 +170,8 @@ def list(request: HttpRequest):
 
 
 def create(request: HttpRequest):
+    if request.method=="GET":
+        print(getSessionUserId(request=(request)))
 
     if request.method == 'POST':
         try:

@@ -12,7 +12,7 @@ $(() => {
 
   for (let index = 0; index < removeHasAttach.length; index++) {
     removeHasAttach[index].addEventListener("click", function () {
-      const res = confirm("첨부파일을 삭제하시겠습니까?");
+      const res = confirm("첨부파일을 삭제하시겠습니까? 허용하시면 지금 즉시 삭제됩니다.");
 
       if (res) {
         const hasAttachId = parseInt(hasAttach[index].value);
