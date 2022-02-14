@@ -1,22 +1,11 @@
-{% extends 'base.html' %}
-<!-- -->
-{% load static %}
-<!--  -->
-{% block content %}
-<!-- -->
-<style>
-  .form_category {
-    display: inline-block;
-    width: 150px;
-  }
-</style>
-{% csrf_token %}
-<input type="hidden" id="noticeId" value="{{notice.id}}" disabled />
-<input type="hidden" id="checkVisibility" value="{{notice.visibility}}" />
-<input type="hidden" id="checkPassword" value="{{notice.password}}" />
-<notice_detail></notice_detail>
-<div id="notice_detail">
-  <div>
+$(() => {
+  const app = Vue.createApp({
+    delimiters: ["{", "}"],
+  });
+
+  app.component("notice_detail", {
+    template: `
+<div>
     <div>
       <span class="form_category">제목</span>
       <span>{{notice.title}}</span>
@@ -53,10 +42,9 @@
       <button id="deleteNotice">삭제</button>
     </div>
     {% endif %}
-  </div>
 </div>
-<!-- -->
-<script src="{% static '/js/visibilityDOM.js' %}"></script>
-<script src="{%static '/js/deleteNotice.js'%}"></script>
-<script src="{%static '/js/checkPassword.js'%}"></script>
-{% endblock %}
+    `,
+  });
+
+  app.mount("#notice_detail");
+});
