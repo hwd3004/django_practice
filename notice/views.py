@@ -7,17 +7,18 @@ from django.http import FileResponse, HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from account.models import User
 from base.views import getSessionUserId, responseAjax
-import notice
 from notice.forms import NoticeCreationForm
 from notice.models import Notice, Notice_Attachment
 from django.core.files.storage import FileSystemStorage
 from django.core.paginator import Paginator
 from django.db.models.fields.files import FieldFile
+from django.db.models import Q
 
 
 def search(request: HttpRequest):
     # temp = Notice.objects.filter(title__contains='fg')
-    return 0
+    print('search 호출')
+    return JsonResponse(0)
 
 
 def detail(request: HttpRequest, pk):
@@ -148,9 +149,46 @@ def update(request: HttpRequest, pk):
         return render(request, 'notice_update.html', {'notice': notice, 'attach': attach})
 
 
-
-
 def list(request: HttpRequest):
+
+    searchType = request.GET.get('searchType')
+    print(searchType)
+
+    keyword = request.GET.get('keyword')
+    print(keyword)
+
+    if searchType == 'title':
+        list = Notice.objects.order_by('-id').all().filter(title__contains=keyword)
+        paginator = Paginator(list, 2)
+
+        pageNumber = request.GET.get("page")
+
+        if pageNumber is None:
+            pageObj = paginator.get_page(1)
+
+            return render(request, 'notice_list.html', {"pageObj": pageObj, 'searchType': searchType, 'keyword': keyword})
+
+        else:
+            pageObj = paginator.get_page(pageNumber)
+
+            return render(request, 'notice_list.html', {"pageObj": pageObj, 'searchType': searchType, 'keyword': keyword})
+
+    elif searchType == 'titleAndContent':
+        list = Notice.objects.order_by('-id').all().filter(Q(title__contains=keyword) | Q(content__contains=keyword))
+        paginator = Paginator(list, 2)
+
+        pageNumber = request.GET.get("page")
+
+        if pageNumber is None:
+            pageObj = paginator.get_page(1)
+
+            return render(request, 'notice_list.html', {"pageObj": pageObj, 'searchType': searchType, 'keyword': keyword})
+
+        else:
+            pageObj = paginator.get_page(pageNumber)
+
+            return render(request, 'notice_list.html', {"pageObj": pageObj, 'searchType': searchType, 'keyword': keyword})
+
     # https://django-orm-cookbook-ko.readthedocs.io/en/latest/asc_or_desc.html
     # 역순 정렬
     list = Notice.objects.order_by('-id').all()
@@ -170,7 +208,7 @@ def list(request: HttpRequest):
 
 
 def create(request: HttpRequest):
-    if request.method=="GET":
+    if request.method == "GET":
         print(getSessionUserId(request=(request)))
 
     if request.method == 'POST':

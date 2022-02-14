@@ -107,3 +107,9 @@ https://parkhyeonchae.github.io/ - 장고 crud 정리 블로그
 ---
 
 https://parkhyeonchae.github.io/2020/04/11/django-project-23/ - 글 수정
+
+---
+
+https://wikidocs.net/71806 - 장고 3-15 검색과 정렬
+
+http://shopnilsazal.github.io/django-pagination-with-basic-search/ - Django Pagination with Basic Search
