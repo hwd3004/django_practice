@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'annoucement.apps.AnnoucementConfig',
     'notice.apps.NoticeConfig',
     'lab.apps.LabConfig',
+    'notice2.apps.Notice2Config',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+<!-- -->
+{% load static %}
+<!--  -->
+{% block content %}
+<!-- -->
+
+<div id="app">
+  <h1>notice2 create</h1>
+
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <table>
+      <tr>
+        <th><label for="id_title">제목:</label></th>
+        <td>
+          <input type="text" name="title" maxlength="150" required id="id_title" />
+        </td>
+      </tr>
+
+      <tr>
+        <th><label for="id_visibility">공개여부:</label></th>
+        <td>
+          <select name="visibility" required id="id_visibility">
+            <option value="" selected>---------</option>
+
+            <option value="public">공개</option>
+
+            <option value="private">비공개</option>
+          </select>
+        </td>
+      </tr>
+
+      <tr>
+        <th><label for="id_password">Password:</label></th>
+        <td>
+          <input type="text" name="password" id="id_password" />
+        </td>
+      </tr>
+
+      <tr>
+        <th><label for="id_content">내용:</label></th>
+        <td>
+          <textarea name="content" cols="40" rows="10" required id="id_content"></textarea>
+        </td>
+      </tr>
+
+      <tr>
+        <th><label for="id_attachment">Attachment:</label></th>
+        <td>
+          <input type="file" name="attachment" id="id_attachment" />
+        </td>
+      </tr>
+    </table>
+    <input type="submit" />
+  </form>
+
+  <!-- <form @submit.prevent="onSubmit" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div>
+      <label>
+        <span>제목</span>
+        <input type="text" name="title" v-model="inputs.title" />
+      </label>
+    </div>
+
+    <div>
+      <label>작성자</label>
+      <input type="text" value="{{request.session.user.userId}}" disabled />
+    </div>
+
+    <div>
+      <span>공개여부</span>
+      &nbsp;
+      <label>
+        <span>공개</span>
+        <input type="radio" name="visibility" v-model="inputs.visibility" value="공개" />
+      </label>
+      &nbsp;
+      <label>
+        <span>비공개</span>
+        <input type="radio" name="visibility" v-model="inputs.visibility" value="비공개" />
+      </label>
+      &nbsp;
+      <label id="passwordLabel">
+        <span>비밀번호</span>
+        <input type="password" name="password" v-model="inputs.password" />
+      </label>
+    </div>
+
+    <div>
+      <label>
+        <span>내용</span>
+        <textarea name="content" v-model="inputs.content" id="summernote"></textarea>
+      </label>
+    </div>
+
+    <div>
+      <label>
+        <span>첨부파일</span>
+        <input type="file" name="attachment" v-on:change="setAttachment" />
+        <input type="file" name="attachment" v-on:change="setAttachment" />
+      </label>
+    </div>
+
+    <br />
+    <input type="submit" />
+  </form> -->
+</div>
+<!-- -->
+<script src="{% static '/js/summernote.js' %}"></script>
+<script src="{% static '/js/notice2/notice2_create.js' %}"></script>
+{% endblock %}

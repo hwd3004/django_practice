@@ -77,10 +77,10 @@ $(() => {
     //   }
     // }
 
-    console.log(formdata);
+    console.log("formdata : ", formdata);
 
-    const thisform = $(this);
-    console.log(thisform);
+    // const thisform = $(this);
+    // console.log(thisform);
 
     $.ajax({
       url: window.location.pathname,
