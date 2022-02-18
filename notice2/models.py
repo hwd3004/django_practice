@@ -2,8 +2,8 @@ from django.db import models
 from account.models import User
 
 VISIBILITY_CHOICES = (
-    ('public', '공개'),
-    ('private', '비공개')
+    ('공개', '공개'),
+    ('비공개', '비공개')
 )
 
 

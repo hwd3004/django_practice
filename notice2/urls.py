@@ -6,4 +6,5 @@ app_name = 'notice2'
 urlpatterns = [
     path('notice2_list/', views.list, name='notice2_list'),
     path('notice2_create/', views.create, name='notice2_create'),
+    path('notice2_getList/', views.getList, name='notice2_getList'),
 ]

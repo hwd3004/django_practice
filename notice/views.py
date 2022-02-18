@@ -15,12 +15,6 @@ from django.db.models.fields.files import FieldFile
 from django.db.models import Q
 
 
-def search(request: HttpRequest):
-    # temp = Notice.objects.filter(title__contains='fg')
-    print('search 호출')
-    return JsonResponse(0)
-
-
 def detail(request: HttpRequest, pk):
 
     # print(pk)
@@ -215,7 +209,7 @@ def create(request: HttpRequest):
         try:
             form = NoticeCreationForm(request.POST, request.FILES)
 
-            # print(form)
+            print(form)
 
             if form.is_valid():
                 temp_form: Notice = form.save(commit=False)

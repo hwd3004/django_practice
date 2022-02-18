@@ -1,4 +1,4 @@
-{% comment %} head.html {% endcomment %}
+{% comment %} head.html {% endcomment %} {% load static %}
 <head>
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -19,5 +19,7 @@
 
   <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
+
+  <script src="{% static '/js/nn.vue.js' %}"></script>
   <title>Document</title>
 </head>
