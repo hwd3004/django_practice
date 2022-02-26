@@ -1,3 +1,9 @@
+https://iamiet.tistory.com/54?category=928115 - django Ubuntu 에서 mysqlclient 설치오류 해결방법
+
+sudo apt install python3-dev default-libmysqlclient-dev build-essential
+
+---
+
 sudo service mysql start
 
 ```
