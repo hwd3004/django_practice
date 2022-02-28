@@ -1,7 +1,9 @@
 from datetime import datetime
 import json
+import os
 from pickle import FALSE
 import re
+import time
 from tokenize import Number
 from django.http import FileResponse, HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
@@ -13,6 +15,27 @@ from django.core.files.storage import FileSystemStorage
 from django.core.paginator import Paginator
 from django.db.models.fields.files import FieldFile
 from django.db.models import Q
+
+
+def deleteFile(item):
+    try:
+        path = str(item.path)
+        attach = str(item.path)
+
+        path = path.split("/")
+
+        path = f"{path[0]}/{path[1]}/{path[2]}"
+
+        if os.path.isdir(path):
+            os.remove(attach)
+            os.removedirs(path)
+
+        item.delete()
+        
+        return True
+    except Exception as e:
+        print(e)
+        return FALSE
 
 
 def detail(request: HttpRequest, pk):
@@ -56,7 +79,20 @@ def removeHasAttach(request: HttpRequest):
             hasAttachId: int = json.loads(request.body)['hasAttachId']
 
             item: Notice_Attachment = Notice_Attachment.objects.get(pk=hasAttachId)
-            item.delete()
+
+            deleteFile(item=item)
+            # path = str(item.path)
+            # attach = str(item.path)
+
+            # path = path.split("/")
+
+            # path = f"{path[0]}/{path[1]}/{path[2]}"
+
+            # if os.path.isdir(path):
+            #     os.remove(attach)
+            #     os.removedirs(path)
+
+            # item.delete()
 
             return JsonResponse(responseAjax('첨부파일 삭제 완료', 1))
         else:
@@ -68,11 +104,31 @@ def removeHasAttach(request: HttpRequest):
 
 def delete(request: HttpRequest, pk):
     try:
-        print(f"pk : {pk}")
+        # print(f"pk : {pk}")
         notice: Notice = get_object_or_404(Notice, pk=pk)
         if getSessionUserId(request=request) != notice.author.pk:
             return JsonResponse(responseAjax('비정상적 접근', -1))
         else:
+            print(notice)
+
+            attach: Notice_Attachment = Notice_Attachment.objects.filter(notice=notice).all()
+            print(attach)
+
+            for item in attach:
+                deleteFile(item=item)
+                # path = str(item.path)
+                # attach = str(item.path)
+
+                # path = path.split("/")
+
+                # path = f"{path[0]}/{path[1]}/{path[2]}"
+
+                # if os.path.isdir(path):
+                #     os.remove(attach)
+                #     os.removedirs(path)
+
+                # item.delete()
+
             notice.delete()
 
             return JsonResponse(responseAjax('삭제 완료', 1))
@@ -121,7 +177,8 @@ def update(request: HttpRequest, pk):
                 if len(files) != 0:
                     for tempFile in files:
                         fs = FileSystemStorage(base_url="notice/")
-                        currentTime: str = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                        # currentTime: str = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                        currentTime = round(time.time() * 1000)
                         tempFilePath = fs.save(f"notice/{currentTime}/{tempFile.name}", tempFile)
 
                         newNoticeAttach = Notice_Attachment()
@@ -249,7 +306,8 @@ def create(request: HttpRequest):
                 if len(files) != 0:
                     for tempFile in files:
                         fs = FileSystemStorage(base_url="notice/")
-                        currentTime: str = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                        # currentTime: str = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                        currentTime = round(time.time() * 1000)
                         tempFilePath = fs.save(f"notice/{currentTime}/{tempFile.name}", tempFile)
 
                         newNoticeAttach = Notice_Attachment()
