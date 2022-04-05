@@ -1,5 +1,5 @@
 $(() => {
-    const csrftoken = document.querySelector("[name=csrfmiddlewaretoken]").value;
+  const csrftoken = document.querySelector("[name=csrfmiddlewaretoken]").value;
 
   const deleteNotice = document.querySelector("#deleteNotice");
 
