@@ -18,6 +18,12 @@ rm -rf media && mkdir media
 
 ---
 
+python manage.py makemigrations
+
+python manage.py migrate
+
+---
+
 테이블 새로 만들기
 
 ```
